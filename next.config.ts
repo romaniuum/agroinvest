@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Для Docker: в .next/standalone только нужные файлы и server.js.
+  output: "standalone",
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {

@@ -1,0 +1,16 @@
+.git
+.github
+.next
+node_modules
+src/generated
+uploads
+backups
+deploy
+.env
+.env.*
+!.env.example
+*.log
+npm-debug.log*
+coverage
+.vscode
+.claude

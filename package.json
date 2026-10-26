@@ -16,7 +16,8 @@
     "db:deploy": "prisma migrate deploy",
     "test": "vitest run",
     "test:watch": "vitest",
-    "create-admin": "tsx scripts/create-admin.ts"
+    "create-admin": "tsx scripts/create-admin.ts",
+    "build:create-admin": "node scripts/build-create-admin.mjs"
   },
   "dependencies": {
     "@node-rs/argon2": "2.2.2",
