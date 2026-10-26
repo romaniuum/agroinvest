@@ -45,4 +45,14 @@ npm run dev
 
 ## Стек
 
-Next.js (App Router), TypeScript, CSS Modules, PostgreSQL + Prisma 7, zod, nodemailer, Vitest, ESLint, Prettier. Дальше по этапам: Docker Compose для всего приложения, Caddy.
+Next.js (App Router), TypeScript, CSS Modules, PostgreSQL + Prisma 7, zod, nodemailer, Vitest, ESLint, Prettier. На сервере — Docker Compose и Caddy.
+
+## Сервер и деплой
+
+Всё про сервер, первый запуск, бэкапы и восстановление — в [deploy/README.md](deploy/README.md).
+
+Собрать и запустить образ локально:
+
+```bash
+docker build -t agroinvest:local .
+```

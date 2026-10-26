@@ -37,8 +37,17 @@
 - Изображения — загрузка на диск сервера (том Docker), ресайз через `sharp`.
 - Уведомления — Telegram Bot API и почта через SMTP (`nodemailer`).
 - Защита формы — поле-ловушка (honeypot) + Яндекс SmartCaptcha + ограничение частоты запросов.
-- Инфраструктура — **Docker Compose** (app, postgres, reverse proxy **Caddy** с автоматическим SSL), деплой на российский VPS.
-- CI/CD — **GitHub Actions**: линт, тесты, сборка, деплой по SSH.
+- Инфраструктура — **Docker Compose** (app, postgres, reverse proxy **Caddy** с автоматическим SSL, backup), деплой на российский VPS. Файлы сервера — в `deploy/`, инструкция — `deploy/README.md`.
+- CI/CD — **GitHub Actions**: линт, тесты, сборка; из `main` образ собирается в GitHub, кладётся в `ghcr.io/romaniuum/agroinvest`, сервер обновляется по SSH (включается переменной `DEPLOY_ENABLED`). Мониторинг `/api/health` — workflow «Мониторинг» каждые 10 минут.
+
+## Технические решения, о которых легко забыть
+
+- **Next.js 16 с `cacheComponents`.** Данные из базы на публичных страницах — через `await connection()` + функция с `"use cache"` и `cacheTag` (`src/server/siteData.ts`); действия админки сбрасывают кеш `updateTag`. При сборке база не нужна. Чтение cookie — только внутри `<Suspense>`.
+- **Формы и загрузка JavaScript.** Ввод до «оживления» страницы React стирает. Поэтому поля формы заявки неуправляемые (значения читаются из `FormData`), а в админке поля и кнопки неактивны до гидратации (`useHydrated`, `UntilHydrated`, `SubmitButton`).
+- **После действия в админке** вызывать `refresh()`, иначе форма покажет старые значения.
+- **CSS Modules: `composes` разворачивается только на один уровень** — базовые классы перечислять явно (`composes: button primary`).
+- **Prisma 7:** `migrate dev` не генерирует клиент — `npm run db:migrate` делает это сам; после изменения схемы перезапустить `npm run dev`.
+- **Скрипты в Docker:** `create-admin` собирается esbuild в `dist/create-admin.mjs`; запуск на сервере — `docker compose exec -it app node create-admin.mjs`.
 
 ## Дизайн
 
