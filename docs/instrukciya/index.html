@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <title>Админка сайта «Агроинвест» — инструкция</title>
+    <style>
+      @page {
+        size: A4;
+        margin: 10mm 11mm;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        color: #0f2a47;
+        font-family: Arial, sans-serif;
+        font-size: 10.5pt;
+        line-height: 1.3;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6mm;
+        padding: 4mm 5mm;
+        border-radius: 3mm;
+        background: #0f2a47;
+        color: #fff;
+      }
+      h1 {
+        font-size: 17pt;
+      }
+      header p {
+        font-size: 10pt;
+        opacity: 0.9;
+      }
+      .address {
+        padding: 2mm 3mm;
+        border-radius: 2mm;
+        background: #1a5dab;
+        font-size: 11pt;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      h2 {
+        margin: 3.5mm 0 1.5mm;
+        font-size: 13pt;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 32mm 32mm;
+        gap: 4mm;
+        align-items: start;
+      }
+      /* Цены и фото — рядом, у каждого свой обрезанный скриншот */
+      .pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6mm;
+      }
+      .pair .row {
+        grid-template-columns: minmax(0, 1fr) 30mm;
+      }
+      .crop {
+        height: 52mm;
+        overflow: hidden;
+        border: 0.3mm solid #d8e0ea;
+        border-radius: 2mm;
+      }
+      .crop img {
+        border: 0;
+      }
+      ol {
+        padding-left: 6mm;
+      }
+      li {
+        margin-bottom: 1.3mm;
+      }
+      b {
+        color: #1a5dab;
+      }
+      figure img {
+        display: block;
+        width: 100%;
+        border: 0.3mm solid #d8e0ea;
+        border-radius: 2mm;
+      }
+      figcaption {
+        margin-top: 1mm;
+        color: #4d5f75;
+        font-size: 8pt;
+        text-align: center;
+      }
+      .tg {
+        display: inline-block;
+        margin: 1mm 0 1.6mm;
+        padding: 1.5mm 3mm;
+        border-left: 1mm solid #1a5dab;
+        border-radius: 1mm;
+        background: #eaf3fc;
+        font-size: 9.5pt;
+      }
+      .important {
+        margin-top: 4mm;
+        padding: 3mm 4mm;
+        border: 0.4mm solid #8a2a2a;
+        border-radius: 2mm;
+      }
+      .important h2 {
+        margin: 0 0 1.5mm;
+        color: #8a2a2a;
+      }
+      .important ul {
+        padding-left: 5mm;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Админка сайта «Агроинвест»</h1>
+        <p>
+          Здесь вы видите заявки с сайта, меняете цены и фото работ. Удобно с
+          телефона.
+        </p>
+      </div>
+      <span class="address">[САЙТ]/admin</span>
+    </header>
+
+    <h2>1. Заявки — каждый день</h2>
+    <div class="row">
+      <ol>
+        <li>
+          Когда клиент оставит заявку, в Telegram придёт сообщение:<br />
+          <span class="tg"
+            >Новая заявка № 15 — Ремонт котла<br />[САЙТ]/admin/leads/15</span
+          ><br />
+          Нажмите на ссылку. Если попросит — введите логин и пароль.
+        </li>
+        <li>Нажмите <b>«Позвонить»</b> — телефон сам наберёт номер клиента.</li>
+        <li>
+          Договорились — нажмите <b>«Взять в работу»</b> (или
+          <b>«В работу»</b> прямо в списке). Заявка уйдёт из «Новых» во вкладку
+          «В работе».
+        </li>
+        <li>
+          Важное (адрес, модель котла, когда перезвонить) запишите в
+          <b>«Заметку»</b> и нажмите «Сохранить заметку».
+        </li>
+        <li>
+          Работа сделана — <b>«Готово»</b>. Клиент отказался — ссылка
+          <b>«Отметить как отказ»</b> внизу заявки. Нажали не то —
+          <b>«Вернуть в новые»</b>.
+        </li>
+        <li>
+          Число на кнопке «Заявки» внизу экрана — сколько новых заявок ещё никто
+          не взял.
+        </li>
+      </ol>
+      <figure>
+        <img src="2-list.png" alt="Список заявок" />
+        <figcaption>Список заявок</figcaption>
+      </figure>
+      <figure>
+        <img src="3-lead.png" alt="Карточка заявки" />
+        <figcaption>Карточка заявки</figcaption>
+      </figure>
+    </div>
+
+    <div class="pair">
+      <section>
+        <h2>2. Цены — когда меняются</h2>
+        <div class="row">
+          <ol>
+            <li>Внизу экрана нажмите <b>«Цены»</b>.</li>
+            <li>
+              Впишите цену «от» только числом, без «₽» и точек: <b>2500</b>.
+            </li>
+            <li>
+              Нажмите <b>«Сохранить»</b>. Появится зелёная надпись «Сохранено» —
+              цена на сайте уже новая.
+            </li>
+            <li>
+              Оставили поле пустым — на сайте будет «Цену назовём по телефону».
+            </li>
+          </ol>
+          <figure>
+            <div class="crop"><img src="4-prices.png" alt="Цены" /></div>
+            <figcaption>Цены</figcaption>
+          </figure>
+        </div>
+      </section>
+      <section>
+        <h2>3. Фото работ — после хорошего объекта</h2>
+        <div class="row">
+          <ol>
+            <li>
+              Внизу экрана нажмите <b>«Фото работ»</b>, затем
+              <b>«Выберите файл»</b> — можно сразу сфотографировать.
+            </li>
+            <li>
+              Напишите короткую подпись: «Замена котла в частном доме» — и
+              нажмите <b>«Добавить фото»</b>.
+            </li>
+            <li>
+              На сайте видны <b>три последних</b> фото. Неудачное фото — кнопка
+              «Удалить», подтвердите.
+            </li>
+            <li>Не снимайте людей, номера домов и документы клиентов.</li>
+          </ol>
+          <figure>
+            <div class="crop"><img src="5-photos.png" alt="Фото работ" /></div>
+            <figcaption>Фото работ</figcaption>
+          </figure>
+        </div>
+      </section>
+    </div>
+
+    <div class="important">
+      <h2>Важно</h2>
+      <ul>
+        <li>
+          Пароль никому не сообщайте и не пересылайте в мессенджерах. У каждого
+          сотрудника — свой вход.
+        </li>
+        <li>
+          Заходили с чужого телефона или компьютера — нажмите <b>«Выйти»</b>.
+        </li>
+        <li>
+          Пять раз ошиблись в пароле — вход закроется на 15 минут. Подождите и
+          попробуйте снова.
+        </li>
+        <li>
+          Забыли пароль или что-то не работает — звоните: [КОНТАКТ
+          ОТВЕТСТВЕННОГО].
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
