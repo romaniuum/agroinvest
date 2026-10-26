@@ -1,0 +1,21 @@
+# Для разработки: только база. Приложение и Caddy добавятся на этапе 4.
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-agroinvest}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-agroinvest}
+      POSTGRES_DB: ${POSTGRES_DB:-agroinvest}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  db-data:
