@@ -4,6 +4,7 @@ import s from "@/components/TextPage.module.css";
 
 export const metadata: Metadata = {
   title: "Политика конфиденциальности — Агроинвест",
+  alternates: { canonical: "/privacy" },
 };
 
 export default function PrivacyPage() {

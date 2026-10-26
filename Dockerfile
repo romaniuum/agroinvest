@@ -18,6 +18,9 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 # Ключ капчи для браузера вшивается в сборку
 ARG NEXT_PUBLIC_SMARTCAPTCHA_CLIENT_KEY=""
+# Адрес сайта для robots, sitemap и Open Graph (собираются при сборке)
+ARG SITE_URL="http://localhost:3000"
+ENV SITE_URL=$SITE_URL
 ENV NEXT_PUBLIC_SMARTCAPTCHA_CLIENT_KEY=$NEXT_PUBLIC_SMARTCAPTCHA_CLIENT_KEY
 ENV NEXT_TELEMETRY_DISABLED=1
 # Клиент Prisma (src/generated) в образ не копируется — генерируем здесь
