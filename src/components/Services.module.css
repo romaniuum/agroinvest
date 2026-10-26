@@ -1,0 +1,77 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: var(--gray-bg);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 20px;
+  border-radius: 16px;
+  background: var(--white);
+  color: var(--blue);
+}
+
+.title {
+  margin-bottom: 16px;
+  color: var(--navy);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.points {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+  list-style: none;
+}
+
+.points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--blue);
+}
+
+.price {
+  margin-top: auto;
+  margin-bottom: 20px;
+  color: var(--navy);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .card {
+    padding: 24px 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+}
