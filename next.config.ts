@@ -1,9 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  experimental: {
+    serverActions: {
+      // Фото с телефона весят до 10–15 МБ; сервер уменьшает их сам.
+      bodySizeLimit: "16mb",
+    },
+  },
 };
 
 export default nextConfig;

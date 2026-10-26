@@ -36,3 +36,43 @@ model Lead {
   @@index([status, createdAt])
   @@index([phone, createdAt])
 }
+
+// Цена «от …» на карточке услуги. Строки создаёт миграция, менеджер меняет только priceFrom.
+model ServicePrice {
+  slug      String   @id
+  title     String
+  priceFrom Int?
+  unit      String   @default("")
+  updatedAt DateTime @updatedAt
+}
+
+// Фото в блоке «Наши работы». На диске лежат fileName-800.webp и fileName-1600.webp.
+model WorkPhoto {
+  id        Int      @id @default(autoincrement())
+  fileName  String
+  caption   String   @default("")
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([sortOrder, id])
+}
+
+model AdminUser {
+  id           Int            @id @default(autoincrement())
+  login        String         @unique
+  passwordHash String
+  createdAt    DateTime       @default(now())
+  lastLoginAt  DateTime?
+  sessions     AdminSession[]
+}
+
+// id — SHA-256 от токена; сам токен хранится только в cookie.
+model AdminSession {
+  id        String    @id
+  userId    Int
+  user      AdminUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
