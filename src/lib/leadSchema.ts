@@ -1,39 +1,66 @@
-import { z } from "zod";
-import { serviceOptions } from "./content";
+import { serviceOptions, type ServiceValue } from "./content";
 import { isPhoneComplete, phoneDigits } from "./phone";
 
-const serviceValues = serviceOptions.map((o) => o.value) as [
-  (typeof serviceOptions)[number]["value"],
-  ...(typeof serviceOptions)[number]["value"][],
-];
-
 // Общие правила проверки заявки: в браузере и на сервере.
-export const leadSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Напишите, как к вам обращаться")
-    .max(100, "Имя слишком длинное"),
-  phone: z
-    .string()
-    .refine(isPhoneComplete, "Введите номер полностью")
-    .transform((value) => `+7${phoneDigits(value)}`),
-  service: z.enum(serviceValues).default("OTHER"),
-  consent: z.literal(true, "Без согласия мы не можем принять заявку"),
-  captchaToken: z.string().max(5000).optional(),
-});
+// Без библиотек — чтобы не тянуть лишний JavaScript на телефон посетителя.
 
-export type LeadInput = z.infer<typeof leadSchema>;
+export type LeadInput = {
+  name: string;
+  phone: string; // +79991234567
+  service: ServiceValue;
+  consent: true;
+  captchaToken?: string;
+};
 
-export type LeadErrors = Partial<Record<"name" | "phone" | "consent", string>>;
+export type LeadErrors = Partial<
+  Record<"name" | "phone" | "consent" | "service" | "request", string>
+>;
 
-export function leadErrors(error: z.ZodError): LeadErrors {
+export type LeadValidation =
+  { success: true; data: LeadInput } | { success: false; errors: LeadErrors };
+
+const serviceValues: readonly string[] = serviceOptions.map((o) => o.value);
+
+export function validateLead(raw: unknown): LeadValidation {
+  const input = (raw && typeof raw === "object" ? raw : {}) as Record<
+    string,
+    unknown
+  >;
   const errors: LeadErrors = {};
-  for (const issue of error.issues) {
-    const field = issue.path[0];
-    if (field === "name" || field === "phone" || field === "consent") {
-      errors[field] ??= issue.message;
-    }
+
+  const name = typeof input.name === "string" ? input.name.trim() : "";
+  if (!name) errors.name = "Напишите, как к вам обращаться";
+  else if (name.length > 100) errors.name = "Имя слишком длинное";
+
+  const phone = typeof input.phone === "string" ? input.phone : "";
+  if (!isPhoneComplete(phone)) errors.phone = "Введите номер полностью";
+
+  const service = input.service ?? "OTHER";
+  if (typeof service !== "string" || !serviceValues.includes(service)) {
+    errors.service = "Выберите услугу из списка";
   }
-  return errors;
+
+  if (input.consent !== true) {
+    errors.consent = "Без согласия мы не можем принять заявку";
+  }
+
+  const captchaToken = input.captchaToken;
+  if (
+    captchaToken !== undefined &&
+    (typeof captchaToken !== "string" || captchaToken.length > 5000)
+  ) {
+    errors.request = "Неверный запрос";
+  }
+
+  if (Object.keys(errors).length) return { success: false, errors };
+  return {
+    success: true,
+    data: {
+      name,
+      phone: `+7${phoneDigits(phone)}`,
+      service: service as ServiceValue,
+      consent: true,
+      captchaToken: captchaToken as string | undefined,
+    },
+  };
 }

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { serviceOptions } from "@/lib/content";
-import { leadErrors, leadSchema, type LeadErrors } from "@/lib/leadSchema";
+import { validateLead, type LeadErrors } from "@/lib/leadSchema";
 import { formatPhone } from "@/lib/phone";
 import { site } from "@/lib/site";
 import { useHydrated } from "./useHydrated";
@@ -56,8 +56,8 @@ export function LeadForm() {
       consent: form.get("consent") === "on",
       website: String(form.get("website") ?? ""),
     };
-    const parsed = leadSchema.safeParse(data);
-    if (!parsed.success) return showErrors(leadErrors(parsed.error));
+    const checked = validateLead(data);
+    if (!checked.success) return showErrors(checked.errors);
     setErrors({});
 
     setSending(true);

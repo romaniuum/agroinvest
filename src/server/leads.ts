@@ -1,5 +1,5 @@
 import type { ServiceValue } from "@/lib/content";
-import { leadErrors, leadSchema, type LeadErrors } from "@/lib/leadSchema";
+import { validateLead, type LeadErrors } from "@/lib/leadSchema";
 import type { RateLimiter } from "@/lib/rateLimit";
 import { callbackMessage } from "@/lib/workHours";
 
@@ -51,11 +51,9 @@ export async function submitLead(
   const website = (raw as { website?: unknown } | null)?.website;
   if (typeof website === "string" && website.trim() !== "") return ok(null);
 
-  const parsed = leadSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { kind: "invalid", errors: leadErrors(parsed.error) };
-  }
-  const input = parsed.data;
+  const checked = validateLead(raw);
+  if (!checked.success) return { kind: "invalid", errors: checked.errors };
+  const input = checked.data;
 
   if (!deps.rateLimiter.hit(ctx.ip, ctx.now.getTime())) {
     return { kind: "rate_limited" };
