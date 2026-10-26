@@ -1,0 +1,38 @@
+{
+  "arderia": {
+    "width": 273,
+    "height": 400
+  },
+  "baltgaz": {
+    "width": 400,
+    "height": 285
+  },
+  "baxi-eliseev": {
+    "width": 278,
+    "height": 400
+  },
+  "baxi-mikhail": {
+    "width": 275,
+    "height": 400
+  },
+  "baxi-valery": {
+    "width": 283,
+    "height": 400
+  },
+  "protherm": {
+    "width": 400,
+    "height": 286
+  },
+  "vaillant": {
+    "width": 400,
+    "height": 282
+  },
+  "viessmann": {
+    "width": 284,
+    "height": 400
+  },
+  "zont": {
+    "width": 293,
+    "height": 400
+  }
+}

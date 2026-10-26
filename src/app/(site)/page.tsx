@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Certificates } from "@/components/Certificates";
 import { Hero } from "@/components/Hero";
 import { LeadSection } from "@/components/LeadSection";
 import { Services } from "@/components/Services";
@@ -21,6 +22,7 @@ export default function HomePage() {
       <Services />
       <Steps />
       <Works />
+      <Certificates />
       <LeadSection />
     </>
   );
