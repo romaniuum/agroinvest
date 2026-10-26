@@ -1,0 +1,83 @@
+# Боевой сервер: сайт, база, Caddy (HTTPS) и ночной бэкап.
+# Лежит в /opt/agroinvest рядом с .env, Caddyfile и папкой backup.
+name: agroinvest
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  app:
+    image: ${APP_IMAGE:-ghcr.io/romaniuum/agroinvest:latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      SITE_URL: https://${DOMAIN}
+      UPLOAD_DIR: /data/uploads
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+
+  # Каждую ночь: дамп базы и архив фото в ./backups, хранение 14 дней, проверка восстановления.
+  backup:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Moscow
+      PGHOST: db
+      PGUSER: ${POSTGRES_USER}
+      PGPASSWORD: ${POSTGRES_PASSWORD}
+      PGDATABASE: ${POSTGRES_DB}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+    command:
+      [
+        "sh",
+        "-c",
+        "cp /backup-scripts/crontab /etc/crontabs/root && exec crond -f -l 8",
+      ]
+    volumes:
+      - ./backup:/backup-scripts:ro
+      - ./backups:/backups
+      - uploads:/uploads:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  uploads:
+  caddy-data:
+  caddy-config:
