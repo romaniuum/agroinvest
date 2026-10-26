@@ -1,0 +1,93 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Линт, типы, тесты, сборка
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  deploy:
+    name: Деплой на сервер
+    needs: check
+    # Включается переменной репозитория DEPLOY_ENABLED=true, когда сервер готов
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      packages: write
+    env:
+      IMAGE: ghcr.io/${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Собрать и загрузить образ
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_SMARTCAPTCHA_CLIENT_KEY=${{ vars.SMARTCAPTCHA_CLIENT_KEY }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Доступ к серверу по SSH
+        run: |
+          install -d -m 700 ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Обновить файлы и перезапустить
+        env:
+          TARGET: ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          scp -r deploy/docker-compose.yml deploy/Caddyfile deploy/restore.sh deploy/backup \
+            "$TARGET:/opt/agroinvest/"
+          # Токен живёт только во время этого запуска и передаётся через stdin
+          echo "$GHCR_TOKEN" | ssh "$TARGET" \
+            "docker login ghcr.io -u '${{ github.actor }}' --password-stdin"
+          ssh "$TARGET" "cd /opt/agroinvest \
+            && docker compose pull \
+            && docker compose up -d --remove-orphans; \
+            status=\$?; docker logout ghcr.io; docker image prune -f; exit \$status"
+
+      - name: Проверить, что сайт отвечает
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS --max-time 10 "https://${{ vars.DOMAIN }}/api/health"; then exit 0; fi
+            sleep 5
+          done
+          echo "Сайт не ответил после деплоя"
+          exit 1
