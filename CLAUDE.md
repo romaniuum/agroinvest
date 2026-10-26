@@ -135,12 +135,13 @@
 
 Тексты интерфейса — без технических слов («контент», «slug», «SEO» и т. п.).
 
-## Модель данных (`Lead` согласована на этапе 2, остальное — черновик)
+## Модель данных (согласована на этапах 2 и 3)
 
 - `Lead`: id (он же номер заявки), name, phone (`+79991234567`), service (`REPAIR` / `INSTALL` / `MAINTENANCE` / `OTHER`), status (`NEW` / `IN_PROGRESS` / `DONE` / `REJECTED`), note, consentAt, createdAt, updatedAt. IP клиента в базе не храним — только в памяти для лимита заявок.
-- `ServicePrice`: id, slug, title, priceFrom, unit (`""` или `"/ мес"`), updatedAt.
-- `WorkPhoto`: id, filePath, caption, sortOrder, createdAt.
-- `AdminUser`: id, login, passwordHash, createdAt, lastLoginAt.
+- `ServicePrice`: slug (ключ: `repair` / `install` / `maintenance`), title, priceFrom (пусто — на сайте «Цену назовём по телефону»), unit (`""` или `"/ мес"`), updatedAt. Три строки создаёт миграция.
+- `WorkPhoto`: id, fileName (на диске `UPLOAD_DIR/<fileName>-800.webp` и `-1600.webp`), caption, sortOrder, createdAt. На сайте — первые три (новые сверху); если фото нет, блок «Наши работы» скрыт.
+- `AdminUser`: id, login, passwordHash (argon2id), createdAt, lastLoginAt.
+- `AdminSession`: id (SHA-256 токена из cookie), userId, expiresAt (30 дней, продлевается при действиях), createdAt.
 
 Первый администратор создаётся скриптом `npm run create-admin`, не через интерфейс.
 
