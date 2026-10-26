@@ -1,0 +1,87 @@
+.footer {
+  padding: 56px 0 32px;
+  background: var(--navy);
+  color: var(--white);
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.contacts {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.name {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.phone,
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.phone {
+  color: var(--white);
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.phone:hover {
+  text-decoration: underline;
+}
+
+.map {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+  border: 2px dashed rgb(255 255 255 / 40%);
+  border-radius: 16px;
+}
+
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgb(255 255 255 / 25%);
+  font-size: 16px;
+}
+
+.link {
+  color: var(--white);
+}
+
+.phone:focus-visible,
+.link:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  .footer {
+    padding-top: 40px;
+  }
+
+  .bottom {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,130 @@
+.topBar {
+  padding: 10px 0;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 16px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 88px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.logoMark {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.logoName {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.logoTagline {
+  display: block;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--navy);
+  font-size: 24px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.phone svg {
+  color: var(--blue);
+}
+
+.phone:hover {
+  color: var(--blue-dark);
+}
+
+.callRound {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.logo:focus-visible,
+.phone:focus-visible,
+.callRound:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+@media (max-width: 1000px) {
+  .cta {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .inner {
+    min-height: 76px;
+  }
+
+  .logoMark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logoName {
+    font-size: 20px;
+  }
+
+  .phone {
+    display: none;
+  }
+
+  .callRound {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+}

@@ -1,0 +1,16 @@
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main {
+  flex: 1;
+}
+
+@media (max-width: 760px) {
+  /* Место под закреплённую панель внизу экрана */
+  .shell {
+    padding-bottom: calc(77px + env(safe-area-inset-bottom));
+  }
+}
