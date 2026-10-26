@@ -1,0 +1,39 @@
+:root {
+  --navy: #0f2a47;
+  --blue: #1a5dab;
+  --blue-dark: #0f3f78;
+  --sky: #eaf3fc;
+  --gray-bg: #f4f6f9;
+  --border: #d8e0ea;
+  --input-border: #c9d4e2;
+  --text: #33475e;
+  --muted: #4d5f75;
+  --success: #1e6b3a;
+  --danger: #8a2a2a;
+  --white: #ffffff;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--white);
+  color: var(--text);
+  font-family: var(--font-golos), Arial, sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
