@@ -1,0 +1,139 @@
+.form {
+  display: grid;
+  gap: 22px;
+}
+
+.field {
+  min-width: 0;
+  border: 0;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.input {
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 16px;
+  border: 2px solid var(--input-border);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--navy);
+  font: inherit;
+  font-size: 20px;
+}
+
+.input::placeholder {
+  color: var(--muted);
+}
+
+.input:focus-visible {
+  border-color: var(--blue);
+  outline: 3px solid var(--sky);
+  outline-offset: 0;
+}
+
+.input[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 10px 14px;
+  border: 2px solid var(--input-border);
+  border-radius: 12px;
+  color: var(--navy);
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.option:has(input:checked) {
+  border-color: var(--blue);
+  background: var(--sky);
+}
+
+.option:has(input:focus-visible) {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.option input,
+.consent input {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  accent-color: var(--blue);
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.consent input {
+  margin-top: 1px;
+}
+
+.consent input:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.link {
+  color: var(--blue);
+}
+
+.link:hover {
+  color: var(--blue-dark);
+}
+
+.error {
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.submit {
+  width: 100%;
+  font-size: 20px;
+}
+
+.thanks {
+  padding: 24px 0;
+  color: var(--navy);
+  font-size: 20px;
+}
+
+.thanks:focus {
+  outline: none;
+}
+
+.thanksTitle {
+  margin-bottom: 8px;
+  color: var(--success);
+  font-size: 26px;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .options {
+    grid-template-columns: 1fr;
+  }
+}
