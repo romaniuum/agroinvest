@@ -6,3 +6,6 @@ src/generated
 prisma/migrations
 uploads
 dist
+e2e/.tmp
+test-results
+playwright-report

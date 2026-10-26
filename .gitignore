@@ -52,3 +52,8 @@ next-env.d.ts
 
 # оригиналы картинок до обработки
 /incoming/
+
+# браузерные тесты
+/e2e/.tmp/
+/test-results/
+/playwright-report/
