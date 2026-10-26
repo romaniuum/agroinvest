@@ -6,18 +6,24 @@
 
 ## Что нужно установить
 
-- Node.js 20.9 или новее (проверено на 24)
+- Node.js 24 или новее
 - npm
 
 ## Запуск на своём компьютере
 
+Нужен Docker (для базы PostgreSQL).
+
 ```bash
 npm install
-cp .env.example .env
+cp .env.example .env   # и впишите пароль базы в POSTGRES_PASSWORD и DATABASE_URL
+npm run db:up          # запустить PostgreSQL в Docker
+npm run db:migrate     # создать таблицы
 npm run dev
 ```
 
 Сайт откроется по адресу http://localhost:3000.
+
+Пока в `.env` не заполнены Telegram, почта и ключи капчи, заявки только сохраняются в базу, а в лог пишется, что уведомление не настроено.
 
 ## Команды
 
@@ -30,7 +36,11 @@ npm run dev
 | `npm run typecheck`    | проверка типов TypeScript          |
 | `npm run format`       | автоформатирование (Prettier)      |
 | `npm run format:check` | проверка форматирования без правок |
+| `npm test`             | тесты (Vitest)                     |
+| `npm run db:up`        | запустить базу в Docker            |
+| `npm run db:migrate`   | применить и создать миграции       |
+| `npm run db:deploy`    | применить миграции на сервере      |
 
 ## Стек
 
-Next.js (App Router), TypeScript, ESLint, Prettier. Дальше по этапам: PostgreSQL + Prisma, Docker Compose, Caddy.
+Next.js (App Router), TypeScript, CSS Modules, PostgreSQL + Prisma 7, zod, nodemailer, Vitest, ESLint, Prettier. Дальше по этапам: Docker Compose для всего приложения, Caddy.

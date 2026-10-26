@@ -135,9 +135,9 @@
 
 Тексты интерфейса — без технических слов («контент», «slug», «SEO» и т. п.).
 
-## Модель данных (черновик, согласовать на этапе 2)
+## Модель данных (`Lead` согласована на этапе 2, остальное — черновик)
 
-- `Lead`: id, number (по порядку), name, phone, service (enum), status (`NEW` / `IN_PROGRESS` / `DONE` / `REJECTED`), note, consentAt, createdAt, updatedAt.
+- `Lead`: id (он же номер заявки), name, phone (`+79991234567`), service (`REPAIR` / `INSTALL` / `MAINTENANCE` / `OTHER`), status (`NEW` / `IN_PROGRESS` / `DONE` / `REJECTED`), note, consentAt, createdAt, updatedAt. IP клиента в базе не храним — только в памяти для лимита заявок.
 - `ServicePrice`: id, slug, title, priceFrom, unit (`""` или `"/ мес"`), updatedAt.
 - `WorkPhoto`: id, filePath, caption, sortOrder, createdAt.
 - `AdminUser`: id, login, passwordHash, createdAt, lastLoginAt.
