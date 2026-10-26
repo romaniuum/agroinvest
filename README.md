@@ -28,24 +28,29 @@ npm run dev
 
 ## Команды
 
-| Команда                | Что делает                                |
-| ---------------------- | ----------------------------------------- |
-| `npm run dev`          | запуск в режиме разработки                |
-| `npm run build`        | сборка для сервера                        |
-| `npm run start`        | запуск собранной версии                   |
-| `npm run lint`         | проверка кода (ESLint)                    |
-| `npm run typecheck`    | проверка типов TypeScript                 |
-| `npm run format`       | автоформатирование (Prettier)             |
-| `npm run format:check` | проверка форматирования без правок        |
-| `npm test`             | тесты (Vitest)                            |
-| `npm run db:up`        | запустить базу в Docker                   |
-| `npm run db:migrate`   | применить и создать миграции              |
-| `npm run db:deploy`    | применить миграции на сервере             |
-| `npm run create-admin` | создать администратора или сменить пароль |
+| Команда                | Что делает                                                                                           |
+| ---------------------- | ---------------------------------------------------------------------------------------------------- |
+| `npm run dev`          | запуск в режиме разработки                                                                           |
+| `npm run build`        | сборка для сервера                                                                                   |
+| `npm run start`        | запуск собранной версии                                                                              |
+| `npm run lint`         | проверка кода (ESLint)                                                                               |
+| `npm run typecheck`    | проверка типов TypeScript                                                                            |
+| `npm run format`       | автоформатирование (Prettier)                                                                        |
+| `npm run format:check` | проверка форматирования без правок                                                                   |
+| `npm test`             | тесты (Vitest)                                                                                       |
+| `npm run test:e2e`     | браузерные тесты Playwright (нужна база из `npm run db:up`; создают отдельную базу `agroinvest_e2e`) |
+| `npm run db:up`        | запустить базу в Docker                                                                              |
+| `npm run db:migrate`   | применить и создать миграции                                                                         |
+| `npm run db:deploy`    | применить миграции на сервере                                                                        |
+| `npm run create-admin` | создать администратора или сменить пароль                                                            |
 
 ## Стек
 
-Next.js (App Router), TypeScript, CSS Modules, PostgreSQL + Prisma 7, zod, nodemailer, Vitest, ESLint, Prettier. На сервере — Docker Compose и Caddy.
+Next.js (App Router), TypeScript, CSS Modules, PostgreSQL + Prisma 7, nodemailer, Vitest, Playwright, ESLint, Prettier. На сервере — Docker Compose и Caddy.
+
+## Инструкция для сотрудников
+
+[docs/instrukciya.pdf](docs/instrukciya.pdf) — один лист A4. Исходник — `docs/instrukciya/index.html`; PDF печатается из Chrome («Печать → Сохранить как PDF», без колонтитулов).
 
 ## Сервер и деплой
 

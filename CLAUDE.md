@@ -47,6 +47,7 @@
 - **После действия в админке** вызывать `refresh()`, иначе форма покажет старые значения.
 - **CSS Modules: `composes` разворачивается только на один уровень** — базовые классы перечислять явно (`composes: button primary`).
 - **Prisma 7:** `migrate dev` не генерирует клиент — `npm run db:migrate` делает это сам; после изменения схемы перезапустить `npm run dev`.
+- **Тесты:** Vitest — логика (`src/**/*.test.ts`), Playwright — браузер (`e2e/`, своя база `agroinvest_e2e`, свой IP на каждого «посетителя» из-за лимитов). В CI оба запускаются на каждый пуш.
 - **Скрипты в Docker:** `create-admin` собирается esbuild в `dist/create-admin.mjs`; запуск на сервере — `docker compose exec -it app node create-admin.mjs`.
 
 ## Дизайн
