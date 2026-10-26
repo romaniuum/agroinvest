@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   experimental: {
+    // CSS небольшой, посетители в основном новые — встраиваем его в HTML, без отдельного запроса
+    inlineCss: true,
     serverActions: {
       // Фото с телефона весят до 10–15 МБ; сервер уменьшает их сам.
       bodySizeLimit: "16mb",
