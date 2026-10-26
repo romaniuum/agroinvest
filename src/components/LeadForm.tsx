@@ -2,59 +2,108 @@
 
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
-import { serviceOptions } from "@/lib/content";
-import { formatPhone, isPhoneComplete } from "@/lib/phone";
+import { serviceOptions, type ServiceValue } from "@/lib/content";
+import { leadErrors, leadSchema, type LeadErrors } from "@/lib/leadSchema";
+import { formatPhone } from "@/lib/phone";
 import { site } from "@/lib/site";
+import { useSmartCaptcha } from "./useSmartCaptcha";
 import ui from "./ui.module.css";
 import s from "./LeadForm.module.css";
-
-type Errors = { name?: string; phone?: string; consent?: string };
 
 export function LeadForm() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [service, setService] = useState("");
+  const [service, setService] = useState<ServiceValue | "">("");
   const [consent, setConsent] = useState(false);
-  const [errors, setErrors] = useState<Errors>({});
-  const [sent, setSent] = useState(false);
+  const [errors, setErrors] = useState<LeadErrors>({});
+  const [sending, setSending] = useState(false);
+  const [serverError, setServerError] = useState("");
+  const [thanks, setThanks] = useState("");
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const consentRef = useRef<HTMLInputElement>(null);
+  const websiteRef = useRef<HTMLInputElement>(null);
   const thanksRef = useRef<HTMLDivElement>(null);
+  const {
+    containerRef: captchaRef,
+    prepare: prepareCaptcha,
+    getToken: getCaptchaToken,
+  } = useSmartCaptcha();
 
-  function validate(): Errors {
-    const next: Errors = {};
-    if (!name.trim()) next.name = "Напишите, как к вам обращаться";
-    if (!isPhoneComplete(phone)) next.phone = "Введите номер полностью";
-    if (!consent) next.consent = "Без согласия мы не можем принять заявку";
-    return next;
-  }
-
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const next = validate();
+  function showErrors(next: LeadErrors) {
     setErrors(next);
-    if (next.name) return nameRef.current?.focus();
-    if (next.phone) return phoneRef.current?.focus();
-    if (next.consent) return consentRef.current?.focus();
-
-    // Отправка на сервер появится на этапе 2.
-    setSent(true);
-    requestAnimationFrame(() => thanksRef.current?.focus());
+    if (next.name) nameRef.current?.focus();
+    else if (next.phone) phoneRef.current?.focus();
+    else if (next.consent) consentRef.current?.focus();
   }
 
-  if (sent) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (sending) return;
+    setServerError("");
+
+    const data = {
+      name,
+      phone,
+      service: service || undefined,
+      consent,
+      website: websiteRef.current?.value ?? "",
+    };
+    const parsed = leadSchema.safeParse(data);
+    if (!parsed.success) return showErrors(leadErrors(parsed.error));
+    setErrors({});
+
+    setSending(true);
+    try {
+      const captchaToken = await getCaptchaToken();
+      const res = await fetch("/api/leads", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, captchaToken }),
+      });
+      const json = (await res.json().catch(() => ({}))) as {
+        message?: string;
+        error?: string;
+        errors?: LeadErrors;
+      };
+      if (res.ok) {
+        setThanks(json.message ?? "");
+        requestAnimationFrame(() => thanksRef.current?.focus());
+        return;
+      }
+      if (json.errors && Object.keys(json.errors).length) {
+        showErrors(json.errors);
+      }
+      setServerError(
+        json.error ??
+          `Не удалось отправить заявку. Позвоните нам: ${site.phone}`,
+      );
+    } catch {
+      setServerError(
+        `Нет связи с сайтом. Проверьте интернет или позвоните нам: ${site.phone}`,
+      );
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (thanks) {
     return (
       <div className={s.thanks} ref={thanksRef} tabIndex={-1} role="status">
         <p className={s.thanksTitle}>Спасибо, заявка отправлена!</p>
-        <p>Перезвоним в течение {site.callbackTime}.</p>
+        <p>{thanks}</p>
       </div>
     );
   }
 
   return (
-    <form className={s.form} onSubmit={handleSubmit} noValidate>
+    <form
+      className={s.form}
+      onSubmit={handleSubmit}
+      onFocusCapture={() => void prepareCaptcha().catch(() => {})}
+      noValidate
+    >
       <div className={s.field}>
         <label htmlFor="lead-name" className={s.label}>
           Ваше имя
@@ -65,6 +114,7 @@ export function LeadForm() {
           name="name"
           type="text"
           autoComplete="name"
+          maxLength={100}
           className={s.input}
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -107,19 +157,32 @@ export function LeadForm() {
         <legend className={s.label}>Что нужно сделать</legend>
         <div className={s.options}>
           {serviceOptions.map((option) => (
-            <label key={option} className={s.option}>
+            <label key={option.value} className={s.option}>
               <input
                 type="radio"
                 name="service"
-                value={option}
-                checked={service === option}
-                onChange={() => setService(option)}
+                value={option.value}
+                checked={service === option.value}
+                onChange={() => setService(option.value)}
               />
-              {option}
+              {option.label}
             </label>
           ))}
         </div>
       </fieldset>
+
+      {/* Поле-ловушка для ботов: человек его не видит и не заполняет */}
+      <div className={s.trap} aria-hidden="true">
+        <label htmlFor="lead-website">Сайт</label>
+        <input
+          ref={websiteRef}
+          id="lead-website"
+          name="website"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+        />
+      </div>
 
       <div className={s.field}>
         <label className={s.consent}>
@@ -146,8 +209,21 @@ export function LeadForm() {
         )}
       </div>
 
-      <button type="submit" className={`${ui.btnPrimary} ${s.submit}`}>
-        Отправить заявку
+      <div ref={captchaRef} />
+
+      {serverError && (
+        <p className={s.serverError} role="alert">
+          {serverError}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        className={`${ui.btnPrimary} ${s.submit}`}
+        disabled={sending}
+        aria-disabled={sending}
+      >
+        {sending ? "Отправляем…" : "Отправить заявку"}
       </button>
     </form>
   );

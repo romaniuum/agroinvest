@@ -115,6 +115,28 @@
   font-size: 20px;
 }
 
+.submit:disabled {
+  background: var(--muted);
+  cursor: wait;
+}
+
+.serverError {
+  padding: 14px 16px;
+  border: 2px solid var(--danger);
+  border-radius: 12px;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+/* Убираем за пределы экрана, а не display: none — так ботам сложнее распознать ловушку */
+.trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 .thanks {
   padding: 24px 0;
   color: var(--navy);

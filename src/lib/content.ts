@@ -55,9 +55,16 @@ export const workPhotos: WorkPhoto[] = [
   { id: 3, caption: "Обслуживание котельной", src: null },
 ];
 
+// Значения совпадают с enum ServiceType в prisma/schema.prisma.
 export const serviceOptions = [
-  "Ремонт котла",
-  "Монтаж системы отопления",
-  "Обслуживание котельной",
-  "Другое, не знаю",
-];
+  { value: "REPAIR", label: "Ремонт котла" },
+  { value: "INSTALL", label: "Монтаж системы отопления" },
+  { value: "MAINTENANCE", label: "Обслуживание котельной" },
+  { value: "OTHER", label: "Другое, не знаю" },
+] as const;
+
+export type ServiceValue = (typeof serviceOptions)[number]["value"];
+
+export function serviceLabel(value: ServiceValue): string {
+  return serviceOptions.find((o) => o.value === value)?.label ?? value;
+}
