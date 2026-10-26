@@ -18,6 +18,16 @@ export function createRateLimiter({
   }
 
   return {
+    // Лимит исчерпан? Попытку не засчитывает.
+    blocked(key: string, now = Date.now()): boolean {
+      const times = (hits.get(key) ?? []).filter((t) => now - t < windowMs);
+      return times.length >= limit;
+    },
+
+    reset(key: string) {
+      hits.delete(key);
+    },
+
     // true — запрос разрешён и засчитан, false — лимит исчерпан.
     hit(key: string, now = Date.now()): boolean {
       if (hits.size > 10_000) prune(now);

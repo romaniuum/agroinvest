@@ -16,3 +16,16 @@ describe("createRateLimiter", () => {
     expect(limiter.hit("ip", 1000)).toBe(true);
   });
 });
+
+describe("blocked и reset", () => {
+  it("blocked не засчитывает попытку, reset снимает блокировку", () => {
+    const limiter = createRateLimiter({ limit: 2, windowMs: 1000 });
+    expect(limiter.blocked("ip", 0)).toBe(false);
+    limiter.hit("ip", 0);
+    limiter.hit("ip", 0);
+    expect(limiter.blocked("ip", 10)).toBe(true);
+    expect(limiter.blocked("ip", 1000)).toBe(false);
+    limiter.reset("ip");
+    expect(limiter.blocked("ip", 10)).toBe(false);
+  });
+});

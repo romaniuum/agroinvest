@@ -5,6 +5,7 @@ import { verifyCaptcha } from "@/server/captcha";
 import { prisma } from "@/server/db";
 import { submitLead, type LeadDeps } from "@/server/leads";
 import { notifyNewLead } from "@/server/notify";
+import { clientIp } from "@/server/request";
 
 // Не больше 5 заявок с одного IP в час.
 const rateLimiter = createRateLimiter({ limit: 5, windowMs: 60 * 60 * 1000 });
@@ -27,12 +28,6 @@ const deps: LeadDeps = {
     }),
   create: (data) => prisma.lead.create({ data, select: leadFields }),
 };
-
-// IP клиента. На сервере его подставляет Caddy в X-Forwarded-For.
-function clientIp(headers: Headers): string {
-  const forwarded = headers.get("x-forwarded-for");
-  return forwarded?.split(",").at(-1)?.trim() || "unknown";
-}
 
 const callUs = `Позвоните нам: ${site.phone}`;
 
