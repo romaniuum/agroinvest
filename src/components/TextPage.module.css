@@ -1,0 +1,67 @@
+.page {
+  padding: 64px 0 80px;
+}
+
+.title {
+  margin-bottom: 24px;
+  color: var(--navy);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.text {
+  max-width: 760px;
+  margin-bottom: 20px;
+  font-size: 20px;
+}
+
+.phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  color: var(--navy);
+  font-size: 30px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.phone svg {
+  color: var(--blue);
+}
+
+.phone:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+@media (max-width: 760px) {
+  .page {
+    padding: 40px 0 48px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .text {
+    font-size: 18px;
+  }
+
+  .phone {
+    font-size: 24px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
