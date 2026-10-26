@@ -31,7 +31,7 @@
 
 - **Next.js** (App Router) + **TypeScript** — и сайт, и админка в одном приложении.
 - **PostgreSQL** + **Prisma** — база и миграции.
-- Стили — **CSS Modules** или Tailwind (выбрать на этапе 1, предложить вариант).
+- Стили — **CSS Modules** (решено на этапе 1). Цвета — CSS-переменные в `src/app/globals.css`, общие кнопки и контейнер — `src/components/ui.module.css`.
 - Шрифт — **Golos Text** (Google Fonts, подключить через `next/font`, с кириллицей).
 - Пароли — `bcrypt` / `argon2`, сессии — httpOnly cookie.
 - Изображения — загрузка на диск сервера (том Docker), ресайз через `sharp`.
