@@ -1,0 +1,612 @@
+/* ——— Каркас ——— */
+
+.shell {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background: var(--gray-bg);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100vh;
+  padding: 24px 16px;
+  background: var(--navy);
+  color: var(--white);
+}
+
+.brand {
+  margin: 0 12px 20px;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.brandSub {
+  display: block;
+  color: rgb(255 255 255 / 75%);
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.nav {
+  display: grid;
+  gap: 6px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 56px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.navLink:hover {
+  background: rgb(255 255 255 / 10%);
+}
+
+.navLinkActive {
+  composes: navLink;
+  background: var(--blue);
+}
+
+.navLinkActive:hover {
+  background: var(--blue);
+}
+
+.badge {
+  min-width: 32px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.sidebarBottom {
+  display: grid;
+  gap: 6px;
+  margin-top: auto;
+}
+
+.logoutButton {
+  composes: navLink;
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.navLink:focus-visible,
+.logoutButton:focus-visible {
+  outline: 3px solid var(--white);
+  outline-offset: 2px;
+}
+
+.mobileTop {
+  display: none;
+}
+
+.main {
+  min-width: 0;
+  padding: 32px 40px 48px;
+}
+
+.content {
+  max-width: 920px;
+}
+
+.title {
+  margin-bottom: 24px;
+  color: var(--navy);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.hint {
+  margin-bottom: 20px;
+  color: var(--muted);
+}
+
+.hintAfter {
+  composes: hint;
+  margin-top: 16px;
+}
+
+/* ——— Кнопки и поля ——— */
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 12px 24px;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.primary {
+  composes: button;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.primary:hover {
+  background: var(--blue-dark);
+}
+
+.secondary {
+  composes: button;
+  border-color: var(--blue);
+  background: var(--white);
+  color: var(--blue);
+}
+
+.secondary:hover {
+  border-color: var(--blue-dark);
+  color: var(--blue-dark);
+}
+
+.success {
+  composes: button;
+  background: var(--success);
+  color: var(--white);
+}
+
+.danger {
+  composes: button;
+  border-color: var(--danger);
+  background: var(--white);
+  color: var(--danger);
+}
+
+.linkButton {
+  padding: 8px 0;
+  border: 0;
+  background: none;
+  color: var(--danger);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.linkButton:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  min-height: 56px;
+  padding: 12px 16px;
+  border: 2px solid var(--input-border);
+  border-radius: 12px;
+  background: var(--white);
+  color: var(--navy);
+  font: inherit;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  border-color: var(--blue);
+  outline: 3px solid var(--sky);
+}
+
+.okMessage {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.errorMessage {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.card {
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--white);
+}
+
+/* ——— Вход ——— */
+
+.loginPage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 16px;
+  background: var(--gray-bg);
+}
+
+.loginCard {
+  composes: card;
+  display: grid;
+  gap: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 32px;
+}
+
+/* ——— Заявки ——— */
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.filter {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 18px;
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  background: var(--white);
+  color: var(--navy);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.filterActive {
+  composes: filter;
+  border-color: var(--navy);
+  background: var(--navy);
+  color: var(--white);
+}
+
+.filter:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.leadList {
+  display: grid;
+  gap: 12px;
+  list-style: none;
+}
+
+.leadCard {
+  composes: card;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px 20px;
+  align-items: center;
+  padding: 20px 24px;
+}
+
+.leadMain {
+  color: inherit;
+  text-decoration: none;
+}
+
+.leadMain:hover .leadName {
+  text-decoration: underline;
+}
+
+.leadMain:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+.leadMeta {
+  color: var(--muted);
+  font-size: 16px;
+}
+
+.leadName {
+  color: var(--navy);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.leadActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.status {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.status_NEW {
+  composes: status;
+  background: var(--blue);
+  color: var(--white);
+}
+
+.status_IN_PROGRESS {
+  composes: status;
+  background: var(--sky);
+  color: var(--blue-dark);
+}
+
+.status_DONE {
+  composes: status;
+  background: #e3f1e8;
+  color: var(--success);
+}
+
+.status_REJECTED {
+  composes: status;
+  background: var(--gray-bg);
+  color: var(--muted);
+}
+
+.empty {
+  composes: card;
+  color: var(--muted);
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--blue);
+  font-weight: 500;
+}
+
+.leadDetail {
+  composes: card;
+  display: grid;
+  gap: 20px;
+}
+
+.detailRow {
+  display: grid;
+  gap: 4px;
+}
+
+.callBig {
+  /* composes разворачивается только на один уровень, поэтому button указан явно */
+  composes: button primary;
+  width: 100%;
+  min-height: 64px;
+  font-size: 22px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ——— Цены ——— */
+
+.priceRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.priceTitle {
+  color: var(--navy);
+  font-weight: 600;
+}
+
+.priceField {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.priceInput {
+  composes: input;
+  width: 160px;
+  text-align: right;
+}
+
+/* ——— Фото ——— */
+
+.photoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.photoCard {
+  composes: card;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+
+.photoCardOnSite {
+  composes: card photoCard;
+  border: 2px solid var(--blue);
+}
+
+.photoPreview {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--gray-bg);
+}
+
+.uploadCard {
+  composes: card;
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.fileInput {
+  font: inherit;
+}
+
+.fileInput::file-selector-button {
+  min-height: 48px;
+  margin-right: 12px;
+  padding: 8px 16px;
+  border: 2px solid var(--blue);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--blue);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ——— Телефон ——— */
+
+@media (max-width: 760px) {
+  .shell {
+    display: block;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+  }
+
+  .sidebar {
+    position: fixed;
+    top: auto;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
+    height: auto;
+    padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  }
+
+  .brand,
+  .sidebarBottom {
+    display: none;
+  }
+
+  .nav {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .navLink {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    min-height: 60px;
+    padding: 6px 4px;
+    font-size: 16px;
+    text-align: center;
+  }
+
+  .badge {
+    min-width: 26px;
+    padding: 0 8px;
+    font-size: 14px;
+  }
+
+  .mobileTop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 16px;
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  .mobileTop a,
+  .mobileTop button {
+    min-height: 44px;
+    padding: 8px 4px;
+    border: 0;
+    background: none;
+    color: var(--white);
+    font: inherit;
+    font-size: 16px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .main {
+    padding: 20px 16px 32px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .leadCard {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+
+  .leadActions > * {
+    flex: 1 1 140px;
+  }
+
+  .priceRow {
+    grid-template-columns: 1fr;
+  }
+
+  .priceInput {
+    width: 100%;
+  }
+
+  .priceField {
+    width: 100%;
+  }
+
+  .loginCard {
+    padding: 24px 16px;
+  }
+}
