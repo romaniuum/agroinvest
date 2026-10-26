@@ -8,6 +8,7 @@ import {
   type FormState,
 } from "../actions";
 import { SubmitButton } from "./SubmitButton";
+import { UntilHydrated } from "./UntilHydrated";
 import s from "../admin.module.css";
 
 export function PhotoCard({
@@ -38,21 +39,26 @@ export function PhotoCard({
       />
       {onSite && <p className={s.okMessage}>Показывается на сайте</p>}
       <form action={action} className={s.detailRow}>
-        <input type="hidden" name="id" value={id} />
-        <label htmlFor={`caption-${id}`} className={s.label}>
-          Подпись
-        </label>
-        <input
-          id={`caption-${id}`}
-          name="caption"
-          defaultValue={caption}
-          maxLength={200}
-          className={s.input}
-        />
-        <SubmitButton className={s.secondary}>Сохранить подпись</SubmitButton>
-        <p role="status" className={state.error ? s.errorMessage : s.okMessage}>
-          {state.error ?? state.message}
-        </p>
+        <UntilHydrated>
+          <input type="hidden" name="id" value={id} />
+          <label htmlFor={`caption-${id}`} className={s.label}>
+            Подпись
+          </label>
+          <input
+            id={`caption-${id}`}
+            name="caption"
+            defaultValue={caption}
+            maxLength={200}
+            className={s.input}
+          />
+          <SubmitButton className={s.secondary}>Сохранить подпись</SubmitButton>
+          <p
+            role="status"
+            className={state.error ? s.errorMessage : s.okMessage}
+          >
+            {state.error ?? state.message}
+          </p>
+        </UntilHydrated>
       </form>
       <form
         action={deletePhotoAction}

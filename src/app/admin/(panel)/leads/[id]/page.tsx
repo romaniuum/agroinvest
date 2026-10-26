@@ -71,9 +71,9 @@ export default async function LeadPage({
           <form action={setLeadStatusAction}>
             <input type="hidden" name="id" value={lead.id} />
             <input type="hidden" name="status" value="REJECTED" />
-            <button type="submit" className={s.linkButton}>
+            <SubmitButton className={s.linkButton}>
               Отметить как отказ
-            </button>
+            </SubmitButton>
           </form>
         )}
       </div>

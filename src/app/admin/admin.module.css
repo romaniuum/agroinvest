@@ -131,6 +131,12 @@
 
 /* ——— Кнопки и поля ——— */
 
+/* Обёртка без своей разметки: дети ведут себя как прямые потомки формы */
+.untilHydrated {
+  display: contents;
+  border: 0;
+}
+
 .button {
   display: inline-flex;
   align-items: center;

@@ -2,8 +2,10 @@
 
 import type { ReactNode } from "react";
 import { useFormStatus } from "react-dom";
+import { useHydrated } from "@/components/useHydrated";
 
-// Кнопка блокируется на время отправки, чтобы не нажали дважды.
+// Кнопка блокируется на время отправки, чтобы не нажали дважды,
+// и до загрузки JavaScript — иначе действие не выполнится.
 export function SubmitButton({
   children,
   pendingText = "Сохраняем…",
@@ -18,11 +20,12 @@ export function SubmitButton({
   value?: string;
 }) {
   const { pending } = useFormStatus();
+  const hydrated = useHydrated();
   return (
     <button
       type="submit"
       className={className}
-      disabled={pending}
+      disabled={pending || !hydrated}
       name={name}
       value={value}
     >

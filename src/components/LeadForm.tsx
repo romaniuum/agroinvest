@@ -1,35 +1,40 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, type FormEvent } from "react";
-import { serviceOptions, type ServiceValue } from "@/lib/content";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { serviceOptions } from "@/lib/content";
 import { leadErrors, leadSchema, type LeadErrors } from "@/lib/leadSchema";
 import { formatPhone } from "@/lib/phone";
 import { site } from "@/lib/site";
+import { useHydrated } from "./useHydrated";
 import { useSmartCaptcha } from "./useSmartCaptcha";
 import ui from "./ui.module.css";
 import s from "./LeadForm.module.css";
 
+// Поля не управляются React: значения живут в самих полях и читаются при отправке.
+// Так не теряется то, что человек успел ввести, пока страница ещё загружалась.
 export function LeadForm() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [service, setService] = useState<ServiceValue | "">("");
-  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<LeadErrors>({});
   const [sending, setSending] = useState(false);
   const [serverError, setServerError] = useState("");
   const [thanks, setThanks] = useState("");
+  const hydrated = useHydrated();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
   const consentRef = useRef<HTMLInputElement>(null);
-  const websiteRef = useRef<HTMLInputElement>(null);
   const thanksRef = useRef<HTMLDivElement>(null);
   const {
     containerRef: captchaRef,
     prepare: prepareCaptcha,
     getToken: getCaptchaToken,
   } = useSmartCaptcha();
+
+  // Номер, введённый до загрузки JavaScript, приводим к маске.
+  useEffect(() => {
+    const input = phoneRef.current;
+    if (input?.value) input.value = formatPhone(input.value);
+  }, []);
 
   function showErrors(next: LeadErrors) {
     setErrors(next);
@@ -43,12 +48,13 @@ export function LeadForm() {
     if (sending) return;
     setServerError("");
 
+    const form = new FormData(e.currentTarget);
     const data = {
-      name,
-      phone,
-      service: service || undefined,
-      consent,
-      website: websiteRef.current?.value ?? "",
+      name: String(form.get("name") ?? ""),
+      phone: String(form.get("phone") ?? ""),
+      service: (form.get("service") as string | null) ?? undefined,
+      consent: form.get("consent") === "on",
+      website: String(form.get("website") ?? ""),
     };
     const parsed = leadSchema.safeParse(data);
     if (!parsed.success) return showErrors(leadErrors(parsed.error));
@@ -98,7 +104,9 @@ export function LeadForm() {
   }
 
   return (
+    // method="post": даже без JavaScript имя и телефон не попадут в адрес страницы
     <form
+      method="post"
       className={s.form}
       onSubmit={handleSubmit}
       onFocusCapture={() => void prepareCaptcha().catch(() => {})}
@@ -116,8 +124,6 @@ export function LeadForm() {
           autoComplete="name"
           maxLength={100}
           className={s.input}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? "lead-name-error" : undefined}
         />
@@ -141,8 +147,9 @@ export function LeadForm() {
           autoComplete="tel"
           placeholder="+7 (___) ___-__-__"
           className={s.input}
-          value={phone}
-          onChange={(e) => setPhone(formatPhone(e.target.value))}
+          onChange={(e) => {
+            e.currentTarget.value = formatPhone(e.currentTarget.value);
+          }}
           aria-invalid={Boolean(errors.phone)}
           aria-describedby={errors.phone ? "lead-phone-error" : undefined}
         />
@@ -158,13 +165,7 @@ export function LeadForm() {
         <div className={s.options}>
           {serviceOptions.map((option) => (
             <label key={option.value} className={s.option}>
-              <input
-                type="radio"
-                name="service"
-                value={option.value}
-                checked={service === option.value}
-                onChange={() => setService(option.value)}
-              />
+              <input type="radio" name="service" value={option.value} />
               {option.label}
             </label>
           ))}
@@ -175,7 +176,6 @@ export function LeadForm() {
       <div className={s.trap} aria-hidden="true">
         <label htmlFor="lead-website">Сайт</label>
         <input
-          ref={websiteRef}
           id="lead-website"
           name="website"
           type="text"
@@ -190,8 +190,6 @@ export function LeadForm() {
             ref={consentRef}
             type="checkbox"
             name="consent"
-            checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
             aria-invalid={Boolean(errors.consent)}
             aria-describedby={errors.consent ? "lead-consent-error" : undefined}
           />
@@ -220,8 +218,7 @@ export function LeadForm() {
       <button
         type="submit"
         className={`${ui.btnPrimary} ${s.submit}`}
-        disabled={sending}
-        aria-disabled={sending}
+        disabled={sending || !hydrated}
       >
         {sending ? "Отправляем…" : "Отправить заявку"}
       </button>

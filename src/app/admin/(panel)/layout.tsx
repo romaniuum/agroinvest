@@ -3,6 +3,7 @@ import { requireAdmin } from "@/server/auth";
 import { prisma } from "@/server/db";
 import { logoutAction } from "../actions";
 import { NavLinks } from "../_components/NavLinks";
+import { SubmitButton } from "../_components/SubmitButton";
 import s from "../admin.module.css";
 
 // Админка всегда строится на сервере по запросу: данные меняются постоянно.
@@ -27,7 +28,9 @@ async function Panel({ children }: { children: React.ReactNode }) {
           Открыть сайт
         </a>
         <form action={logoutAction}>
-          <button type="submit">Выйти</button>
+          <SubmitButton className="" pendingText="Выходим…">
+            Выйти
+          </SubmitButton>
         </form>
       </div>
 
@@ -42,9 +45,9 @@ async function Panel({ children }: { children: React.ReactNode }) {
             Открыть сайт
           </a>
           <form action={logoutAction}>
-            <button type="submit" className={s.logoutButton}>
+            <SubmitButton className={s.logoutButton} pendingText="Выходим…">
               Выйти
-            </button>
+            </SubmitButton>
           </form>
         </div>
       </aside>
