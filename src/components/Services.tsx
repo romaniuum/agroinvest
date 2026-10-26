@@ -1,6 +1,9 @@
-import type { ComponentType } from "react";
+import { connection } from "next/server";
+import { Suspense, type ComponentType } from "react";
 import { services, type Service } from "@/lib/content";
+import { formatPrice } from "@/lib/price";
 import { formAnchor } from "@/lib/site";
+import { getPrices } from "@/server/siteData";
 import { BuildingIcon, CheckIcon, RadiatorIcon, WrenchIcon } from "./icons";
 import ui from "./ui.module.css";
 import s from "./Services.module.css";
@@ -36,7 +39,9 @@ export function Services() {
                   ))}
                 </ul>
                 <p className={s.price}>
-                  от {service.priceFrom} ₽{service.unit && ` ${service.unit}`}
+                  <Suspense fallback={" "}>
+                    <Price slug={service.slug} />
+                  </Suspense>
                 </p>
                 <a href={formAnchor} className={ui.btnPrimary}>
                   {service.cta}
@@ -48,4 +53,11 @@ export function Services() {
       </div>
     </section>
   );
+}
+
+// Цена берётся из базы при запросе (при сборке базы нет), дальше — из кеша.
+async function Price({ slug }: { slug: Service["slug"] }) {
+  await connection();
+  const price = (await getPrices())[slug];
+  return formatPrice(price?.priceFrom ?? null, price?.unit ?? "");
 }

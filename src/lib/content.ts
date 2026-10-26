@@ -1,10 +1,8 @@
-// Статичные цены и фото. На этапе 3 будут браться из базы.
+// Тексты карточек услуг. Цены хранятся в базе (таблица ServicePrice, ключ — slug).
 export type Service = {
   slug: "repair" | "install" | "maintenance";
   title: string;
   points: string[];
-  priceFrom: string;
-  unit: string;
   cta: string;
 };
 
@@ -17,8 +15,6 @@ export const services: Service[] = [
       "Не греет воду или батареи",
       "Ошибка на дисплее, шум, запах",
     ],
-    priceFrom: "[ЦЕНА]",
-    unit: "",
     cta: "Вызвать мастера",
   },
   {
@@ -29,8 +25,6 @@ export const services: Service[] = [
       "Установка котла, труб и радиаторов",
       "Запуск и настройка системы",
     ],
-    priceFrom: "[ЦЕНА]",
-    unit: "",
     cta: "Рассчитать стоимость",
   },
   {
@@ -41,18 +35,8 @@ export const services: Service[] = [
       "Чистка и проверка безопасности",
       "Срочный выезд при аварии",
     ],
-    priceFrom: "[ЦЕНА]",
-    unit: "/ мес",
     cta: "Обсудить договор",
   },
-];
-
-export type WorkPhoto = { id: number; caption: string; src: string | null };
-
-export const workPhotos: WorkPhoto[] = [
-  { id: 1, caption: "Замена газового котла в частном доме", src: null },
-  { id: 2, caption: "Монтаж радиаторов отопления", src: null },
-  { id: 3, caption: "Обслуживание котельной", src: null },
 ];
 
 // Значения совпадают с enum ServiceType в prisma/schema.prisma.
